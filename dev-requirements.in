@@ -1,0 +1,3 @@
+-c requirements.txt  # to constrain the dev requirements
+invoke==2.2.0
+pip-tools==7.3.0
