@@ -1,8 +1,31 @@
+import argparse
 import base64
 from pathlib import Path
 from pprint import pprint
 
 import requests
+
+
+def create_parser() -> argparse.ArgumentParser:
+    """
+    >>> parser = create_parser()
+    >>> args = parser.parse_args('file1.mm file2.mm --clean'.split())
+    >>> args.filenames
+    ['file1.mm', 'file2.mm']
+    >>> args.clean
+    True
+    """
+    parser = argparse.ArgumentParser(description="Generate mermaid diagrams")
+    parser.add_argument(
+        "filenames",
+        nargs="+",
+        metavar="FILENAME",
+        help="file name(s) of mermaid diagram(s)",
+    )
+    parser.add_argument(
+        "-c", "--clean", action="store_true", help="Clean all previous images"
+    )
+    return parser
 
 
 def mm(diagram: str, save_as: str) -> str:
@@ -22,10 +45,20 @@ def mm(diagram: str, save_as: str) -> str:
 
 
 def main() -> None:
-    filename = "file1.mm"
-    file = Path(filename)
-    text = file.read_text()
-    mm(text, save_as=file.stem + ".png")
+    parser = create_parser()
+    args = parser.parse_args()
+
+    print("String Arguments:", args.filenames)
+    print("Boolean Argument:", args.clean)
+
+    for filename in args.filenames:
+        diag_file = Path(filename)
+        image_file = Path(diag_file.stem + ".png")
+        if diag_file.is_file():
+            if image_file.is_file() and args.clean:
+                image_file.unlink()
+            text = diag_file.read_text()
+            mm(text, save_as=image_file.as_posix())
 
 
 if __name__ == '__main__':
