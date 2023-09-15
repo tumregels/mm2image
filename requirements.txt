@@ -8,9 +8,27 @@ certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
     # via requests
+colored==1.4.4
+    # via gooey
+gooey==1.0.8.1
+    # via -r requirements.in
 idna==3.4
     # via requests
+numpy==1.24.4
+    # via wxpython
+pillow==10.0.1
+    # via
+    #   gooey
+    #   wxpython
+psutil==5.9.5
+    # via gooey
+pygtrie==2.5.0
+    # via gooey
 requests==2.31.0
     # via -r requirements.in
+six==1.16.0
+    # via wxpython
 urllib3==2.0.4
     # via requests
+wxpython==4.2.1
+    # via gooey

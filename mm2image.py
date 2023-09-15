@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 import requests
+from gooey import Gooey
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -47,6 +48,7 @@ def mm(diagram: str, save_as: str) -> str:
     return url
 
 
+@Gooey
 def main() -> None:
     parser = create_parser()
     args = parser.parse_args()
