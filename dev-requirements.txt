@@ -4,6 +4,10 @@
 #
 #    pip-compile dev-requirements.in
 #
+altgraph==0.17.3
+    # via
+    #   macholib
+    #   pyinstaller
 build==1.0.3
     # via pip-tools
 click==8.1.7
@@ -12,10 +16,16 @@ importlib-metadata==6.8.0
     # via build
 invoke==2.2.0
     # via -r dev-requirements.in
+macholib==1.16.2
+    # via pyinstaller
 packaging==23.1
     # via build
 pip-tools==7.3.0
     # via -r dev-requirements.in
+pyinstaller==5.13.2
+    # via -r dev-requirements.in
+pyinstaller-hooks-contrib==2023.8
+    # via pyinstaller
 pyproject-hooks==1.0.0
     # via build
 tomli==2.0.1

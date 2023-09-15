@@ -1,4 +1,5 @@
 import pathlib
+import shutil
 
 from invoke import task
 
@@ -38,3 +39,12 @@ def update(c):
     """Generate/update all requirements"""
     c.run("pip-sync requirements.txt dev-requirements.txt")
     print('done')
+
+
+@task(help={'clean': 'remove old artifacts'})
+def build_exe(ctx, clean=False):
+    """Build single file executable"""
+    if clean:
+        shutil.rmtree("build")
+        shutil.rmtree("dist")
+    ctx.run("pyinstaller --onefile --noconsole --noconfirm mm2image.py")
