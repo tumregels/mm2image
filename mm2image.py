@@ -2,7 +2,7 @@ import base64
 from pathlib import Path
 from pprint import pprint
 
-from html2image import Html2Image
+import requests
 
 
 def mm(diagram: str, save_as: str) -> str:
@@ -13,8 +13,10 @@ def mm(diagram: str, save_as: str) -> str:
     base64_string = base64_bytes.decode("ascii")
     url = "https://mermaid.ink/img/" + base64_string
 
-    hti = Html2Image()
-    hti.screenshot(url=url, save_as=save_as)
+    response = requests.get(url)
+    if response.status_code == requests.codes.ok:
+        with open(save_as, "wb") as f:
+            f.write(response.content)
     print(url)
     return url
 

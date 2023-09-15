@@ -8,13 +8,9 @@ certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
     # via requests
-html2image==2.0.4.3
-    # via -r requirements.in
 idna==3.4
     # via requests
 requests==2.31.0
-    # via html2image
+    # via -r requirements.in
 urllib3==2.0.4
     # via requests
-websocket-client==1.6.2
-    # via html2image
