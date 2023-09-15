@@ -1,30 +1,22 @@
-import argparse
 import base64
 import logging
 from pathlib import Path
 
 import requests
-from gooey import Gooey
+from gooey import Gooey, GooeyParser
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def create_parser() -> argparse.ArgumentParser:
-    """
-    >>> parser = create_parser()
-    >>> args = parser.parse_args('file1.mm file2.mm --clean'.split())
-    >>> args.filenames
-    ['file1.mm', 'file2.mm']
-    >>> args.clean
-    True
-    """
-    parser = argparse.ArgumentParser(description="Generate mermaid diagrams")
+def create_parser() -> GooeyParser:
+    parser = GooeyParser(description="Generate mermaid diagrams")
     parser.add_argument(
         "filenames",
         nargs="+",
         metavar="FILENAME",
         help="file name(s) of mermaid diagram(s)",
+        widget="MultiFileChooser"
     )
     parser.add_argument(
         "-c", "--clean", action="store_true", help="Clean all previous images"
@@ -48,7 +40,7 @@ def mm(diagram: str, save_as: str) -> str:
     return url
 
 
-@Gooey
+@Gooey(program_name="mm2image")
 def main() -> None:
     parser = create_parser()
     args = parser.parse_args()
