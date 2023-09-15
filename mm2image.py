@@ -1,9 +1,12 @@
 import argparse
 import base64
+import logging
 from pathlib import Path
-from pprint import pprint
 
 import requests
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -29,7 +32,7 @@ def create_parser() -> argparse.ArgumentParser:
 
 
 def mm(diagram: str, save_as: str) -> str:
-    pprint(diagram)
+    logger.info(diagram)
     graph_bytes = diagram.encode("ascii")
 
     base64_bytes = base64.b64encode(graph_bytes)
@@ -40,7 +43,7 @@ def mm(diagram: str, save_as: str) -> str:
     if response.status_code == requests.codes.ok:
         with open(save_as, "wb") as f:
             f.write(response.content)
-    print(url)
+    logger.info(url)
     return url
 
 
@@ -48,8 +51,8 @@ def main() -> None:
     parser = create_parser()
     args = parser.parse_args()
 
-    print("String Arguments:", args.filenames)
-    print("Boolean Argument:", args.clean)
+    logger.info(f"String Arguments: {args.filenames}")
+    logger.info(f"Boolean Argument: {args.clean}")
 
     for filename in args.filenames:
         diag_file = Path(filename)
