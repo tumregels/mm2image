@@ -48,3 +48,12 @@ def build_exe(ctx, clean=False):
         shutil.rmtree("build")
         shutil.rmtree("dist")
     ctx.run("pyinstaller --onefile --noconsole --noconfirm mm2image.py")
+
+
+@task(help={'clean': 'remove old artifacts'})
+def build_sdist_wheel(ctx, clean=False):
+    """Build source and build distributions"""
+    if clean:
+        shutil.rmtree("build")
+        shutil.rmtree("dist")
+    ctx.run("python -m build .")

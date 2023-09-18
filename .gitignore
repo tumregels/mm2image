@@ -6,4 +6,7 @@ dist/
 *.pyc
 *.zip
 *.png
+*.eggs/
+*.egg-info/
+*.spec
 .DS_Store
