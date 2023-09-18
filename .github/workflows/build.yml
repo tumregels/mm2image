@@ -2,15 +2,19 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
 
   linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     if: "!contains(github.event.head_commit.message, 'skip ci')"
 
     steps:
@@ -73,7 +77,7 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     if: "!contains(github.event.head_commit.message, 'skip ci')"
 
     steps:
@@ -112,5 +116,75 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: mm2image-windows64
+          name: mm2image-windows
           path: .\dist\windows64\mm2image-windows.zip
+
+  publish:
+    needs: [ linux, macos, windows ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: true
+
+      - name: Get tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: mm2image-linux
+        continue-on-error: true
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./mm2image-linux/mm2image-linux.zip
+          asset_name: mm2image-linux-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
+        continue-on-error: true
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: mm2image-macos
+        continue-on-error: true
+
+      - name: Upload MacOS Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./mm2image-macos/mm2image-macos.zip
+          asset_name: mm2image-macos-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
+        continue-on-error: true
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: mm2image-windows
+        continue-on-error: true
+
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./mm2image-windows/mm2image-windows.zip
+          asset_name: mm2image-windows-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
+        continue-on-error: true
