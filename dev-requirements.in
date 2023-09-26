@@ -2,3 +2,8 @@
 invoke==2.2.0
 pip-tools==7.3.0
 pyinstaller==5.13.2
+
+# linting
+black
+isort
+flake8

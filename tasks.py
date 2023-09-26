@@ -57,3 +57,18 @@ def build_sdist_wheel(ctx, clean=False):
         shutil.rmtree("build")
         shutil.rmtree("dist")
     ctx.run("python -m build .")
+
+
+@task
+def autoformat(ctx):
+    """Auto format codebase"""
+    ctx.run("black .", echo=True)
+    ctx.run("isort .", echo=True)
+
+
+@task
+def lint(ctx):
+    """Lint all the project"""
+    ctx.run("black --check .", echo=True)
+    ctx.run("isort --check-only .", echo=True)
+    ctx.run("flake8 .", echo=True)
