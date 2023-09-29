@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+@Gooey(program_name="mm2image")
 def create_parser() -> GooeyParser:
     parser = GooeyParser(description="Generate mermaid diagrams")
     parser.add_argument(
@@ -40,7 +41,6 @@ def mm(diagram: str, save_as: str) -> str:
     return url
 
 
-@Gooey(program_name="mm2image")
 def main() -> None:
     parser = create_parser()
     args = parser.parse_args()

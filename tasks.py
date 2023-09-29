@@ -47,10 +47,10 @@ def build_exe(ctx, clean=False):
     if clean:
         shutil.rmtree("build")
         shutil.rmtree("dist")
-    ctx.run("pyinstaller --onefile --noconsole --noconfirm mm2image.py")
+    ctx.run("pyinstaller --onefile --noconsole --noconfirm --path src --name mm2image src/mm2image/main.py")
 
 
-@task(help={'clean': 'remove old artifacts'})
+@task(help={"clean": "remove old artifacts"})
 def build_sdist_wheel(ctx, clean=False):
     """Build source and build distributions"""
     if clean:
@@ -69,6 +69,6 @@ def autoformat(ctx):
 @task
 def lint(ctx):
     """Lint all the project"""
-    ctx.run("black --check .", echo=True)
-    ctx.run("isort --check-only .", echo=True)
-    ctx.run("flake8 .", echo=True)
+    ctx.run("black --check .", echo=True, warn=True)
+    ctx.run("isort --check-only . --profile black", echo=True, warn=True)
+    ctx.run("flake8 .", echo=True, warn=True)
