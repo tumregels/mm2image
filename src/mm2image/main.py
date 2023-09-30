@@ -1,28 +1,15 @@
 import base64
 import logging
+import sys
 from pathlib import Path
 
 import requests
-from gooey import Gooey, GooeyParser
+
+import mm2image.cli as cli
+import mm2image.gui as gui
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-@Gooey(program_name="mm2image")
-def create_parser() -> GooeyParser:
-    parser = GooeyParser(description="Generate mermaid diagrams")
-    parser.add_argument(
-        "filenames",
-        nargs="+",
-        metavar="FILENAME",
-        help="file name(s) of mermaid diagram(s)",
-        widget="MultiFileChooser"
-    )
-    parser.add_argument(
-        "-c", "--clean", action="store_true", help="Clean all previous images"
-    )
-    return parser
 
 
 def mm(diagram: str, save_as: str) -> str:
@@ -42,8 +29,16 @@ def mm(diagram: str, save_as: str) -> str:
 
 
 def main() -> None:
-    parser = create_parser()
-    args = parser.parse_args()
+    try:
+        parser = cli.create_parser()
+        args = parser.parse_args()
+    except SystemExit as e:
+        if e.code == 0:
+            sys.exit()
+    else:
+        if not args.filenames:
+            parser = gui.create_parser()
+            args = parser.parse_args()
 
     logger.info(f"String Arguments: {args.filenames}")
     logger.info(f"Boolean Argument: {args.clean}")

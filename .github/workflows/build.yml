@@ -24,14 +24,14 @@ jobs:
         run: $CONDA/bin/conda create --yes --name mm2image python=3.10 wxpython=4.2.1 --channel conda-forge
 
       - name: Install dependencies
-        run: $CONDA/envs/mm2image/bin/pip install -r requirements.txt
+        run: $CONDA/envs/mm2image/bin/pip install -e .
 
       - name: Install dev dependencies
         run: $CONDA/envs/mm2image/bin/pip install -r dev-requirements.txt
 
       - name: Create binary
         run: |
-          $CONDA/envs/mm2image/bin/pyinstaller --clean --onefile --noconsole --noconfirm --dist ./dist/linux ./mm2image.py
+          $CONDA/envs/mm2image/bin/pyinstaller --clean --onefile --noconsole --noconfirm --dist ./dist/linux --name mm2image ./src/mm2image/main.py
 
       - name: Zip binary
         run: |
@@ -55,14 +55,14 @@ jobs:
         run: $CONDA/bin/conda create --yes --name mm2image python=3.10 wxpython=4.2.1 --channel conda-forge
 
       - name: Install dependencies
-        run: $CONDA/envs/mm2image/bin/pip install -r requirements.txt
+        run: $CONDA/envs/mm2image/bin/pip install -e .
 
       - name: Install dev dependencies
         run: $CONDA/envs/mm2image/bin/pip install -r dev-requirements.txt
 
       - name: Create binary
         run: |
-          $CONDA/envs/mm2image/bin/pyinstaller --clean --onefile --noconsole --noconfirm --dist ./dist/macos ./mm2image.py
+          $CONDA/envs/mm2image/bin/pyinstaller --clean --onefile --noconsole --noconfirm --dist ./dist/macos --name mm2image ./src/mm2image/main.py
           rm -rf ./dist/macos/mm2image
 
       - name: Zip binary
@@ -95,7 +95,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          %CONDA%\envs\mm2image\Scripts\pip install -r requirements.txt
+          %CONDA%\envs\mm2image\Scripts\pip install -e .
         shell: cmd
 
       - name: Install dev dependencies
@@ -106,7 +106,7 @@ jobs:
       - name: Create binary
         run: |
           %CONDA%\envs\mm2image\Scripts\pyinstaller.exe ^
-          --clean --onefile --noconsole --noconfirm --dist .\dist\windows64 .\mm2image.py
+          --clean --onefile --noconsole --noconfirm --dist .\dist\windows64 --name mm2image .\src\mm2image\main.py
         shell: cmd
 
       - name: Zip binary

@@ -47,7 +47,7 @@ def build_exe(ctx, clean=False):
     if clean:
         shutil.rmtree("build")
         shutil.rmtree("dist")
-    ctx.run("pyinstaller --onefile --noconsole --noconfirm --path src --name mm2image src/mm2image/main.py")
+    ctx.run("pyinstaller --onefile --noconsole --noconfirm --name mm2image src/mm2image/main.py")
 
 
 @task(help={"clean": "remove old artifacts"})
